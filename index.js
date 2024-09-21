@@ -36,6 +36,10 @@ app.get("/api/:date?", (req, res) => {
   // If the date is a number (either in seconds or milliseconds)
   else if (!isNaN(date)) {
     unixTimestamp = Number(date);
+    // If the timestamp is in seconds (10 digits), convert it to milliseconds
+    if (unixTimestamp.toString().length === 10) {
+      unixTimestamp *= 1000; // Convert to milliseconds
+    }
   } 
   // If the date is a valid date string
   else {
@@ -49,11 +53,11 @@ app.get("/api/:date?", (req, res) => {
   }
 
   // Convert to UTC string
-  const utcDate = new Date(unixTimestamp).toUTCString();
+  const date_string = new Date(unixTimestamp).toUTCString();
 
   res.json({
-    unix: Math.floor(unixTimestamp / 1000), // Convert back to seconds for Unix timestamp
-    utc: utcDate
+    unix: unixTimestamp, // Convert back to seconds for Unix timestamp
+    utc: date_string
   });
 });
 
